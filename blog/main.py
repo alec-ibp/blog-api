@@ -45,6 +45,7 @@ def create_post(post: Post = Body(...), db: Session = Depends(get_db)):
     status_code=status.HTTP_200_OK)
 def show_all_posts(db: Session = Depends(get_db)):
     posts = db.query(PostDB).all()
+    
     return posts
 
 
