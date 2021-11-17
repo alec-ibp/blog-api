@@ -89,3 +89,29 @@ def delete_a_post(
     db.commit()
 
     return None
+
+@app.put(
+path='/blog/{id}', 
+status_code=status.HTTP_202_ACCEPTED) 
+def update_a_post(
+    id: int = Path(
+        ...,
+        ge=0
+    ),
+    post: Post = Body(...),
+    db: Session = Depends(get_db)
+    ):
+
+    db_post = db.query(PostDB).filter(
+        PostDB.id == id)
+
+    if not db_post.first():
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"the post {id} doesn't exist!"
+        )
+
+    db_post.update(post.dict())
+    db.commit()
+
+    return None
