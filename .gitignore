@@ -1,4 +1,5 @@
 __init__.py
+credentials.txt
 
 venv/
 __pycache__/
