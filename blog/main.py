@@ -2,8 +2,10 @@
 from typing import List
 
 # Path
-from models.db_models import PostDB
-from models.api_models import Post
+from models.db_models import PostDB, UserDB
+
+from models.api_models import Post, User
+
 from database import SessionLocal, Base, engine
 
 # SQLAlchemy
@@ -27,11 +29,14 @@ def get_db():
         db.close()
 
 
+# Blog 
 @app.post(
     path='/blog',
     status_code=status.HTTP_201_CREATED)
 def create_post(post: Post = Body(...), db: Session = Depends(get_db)):
-    new_post = PostDB(title=post.title, body=post.body, published=post.published)
+    
+    new_post = PostDB(**post.dict())
+
     db.add(new_post)
     db.commit()
     db.refresh(new_post)
@@ -45,7 +50,7 @@ def create_post(post: Post = Body(...), db: Session = Depends(get_db)):
     status_code=status.HTTP_200_OK)
 def show_all_posts(db: Session = Depends(get_db)):
     posts = db.query(PostDB).all()
-    
+
     return posts
 
 
@@ -124,3 +129,15 @@ def update_a_post(
     db.commit()
 
     return None
+
+# User
+@app.post('/user')
+def create_user(user: User = Body(...), db : Session = Depends(get_db)):
+
+    new_user = UserDB(**user.dict())
+    db.add(new_user)
+    db.commit()
+    db.refresh(new_user)
+
+    return new_user
+    

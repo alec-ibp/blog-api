@@ -19,3 +19,23 @@ class PostDB(Base):
         self.title = title
         self.body = body
         self.published = published
+
+
+class UserDB(Base):
+    __tablename__ = 'users'
+
+    id = Column(Integer, primary_key=True, index=True)
+
+    first_name = Column(String(32))
+    last_name = Column(String(32))
+    username = Column(String(64))
+    email = Column(String(128))
+    password = Column(String(128))
+
+
+    def __init__(self, first_name, last_name, username, email, password) -> None:
+        self.first_name = first_name
+        self.last_name = last_name
+        self.username = username
+        self.email = email
+        self.password = password
