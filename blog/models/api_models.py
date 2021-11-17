@@ -8,7 +8,7 @@ from pydantic.fields import Field
 class Post(BaseModel):
     title: str = Field(
         ...,
-        min_length=5,
+        min_length=1,
         max_length=64
     )
 

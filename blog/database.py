@@ -15,6 +15,3 @@ DATABASE_URL = get_database_url()
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(bind=engine, autocommit=False, autoflush=False)
 Base = declarative_base()
-
-
-

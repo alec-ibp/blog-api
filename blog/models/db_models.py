@@ -10,7 +10,7 @@ class PostDB(Base):
 
     id = Column(Integer, primary_key=True, index=True)
 
-    title = Column(String(32))
+    title = Column(String(64))
     body = Column(Text)
     published = Column(Boolean)
 

@@ -22,6 +22,7 @@ def get_db():
     finally:
         db.close()
 
+
 @app.post(
     path='/blog',
     status_code=status.HTTP_201_CREATED)
@@ -33,3 +34,32 @@ def create_post(post: Post = Body(...), db: Session = Depends(get_db)):
 
     return new_post
     
+
+@app.get(
+    path='/blog',
+    status_code=status.HTTP_200_OK)
+def show_all_posts(db: Session = Depends(get_db)):
+    posts = db.query(PostDB).all()
+    return posts
+
+@app.get(
+    path='/blog/{id}',
+    status_code=status.HTTP_200_OK)
+def show_a_post(
+    id: int = Path(
+        ...,
+        ge=1
+    ),
+    db: Session = Depends(get_db)
+    ):
+
+    post = db.query(PostDB).filter(
+        PostDB.id == id
+    ).first()
+
+    if not post:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"The post {id} doesn't exist!")
+    
+    return post
