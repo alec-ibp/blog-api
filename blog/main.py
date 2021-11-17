@@ -1,4 +1,4 @@
-# Path'
+# Path
 from models.db_models import PostDB
 from models.api_models import Post
 from database import SessionLocal, Base, engine
@@ -63,3 +63,29 @@ def show_a_post(
             detail=f"The post {id} doesn't exist!")
     
     return post
+
+
+@app.delete(
+    path='/blog/{id}',
+    status_code=status.HTTP_204_NO_CONTENT)
+def delete_a_post(
+    id: int = Path(
+        ...,
+        ge=1
+    ),
+    db: Session = Depends(get_db)
+    ):
+
+    db_post = db.query(PostDB).filter(
+        PostDB.id == id)
+    
+    if not db_post:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"the post {id} doesn't exist!"
+        )
+    
+    db_post.delete(synchronize_session=False)
+    db.commit()
+
+    return None
