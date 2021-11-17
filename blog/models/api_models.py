@@ -1,5 +1,6 @@
 # Python
 from typing import Optional
+
 # Pydantic
 from pydantic import BaseModel
 from pydantic.fields import Field
@@ -21,3 +22,7 @@ class Post(BaseModel):
     published: Optional[bool] = Field(
         default=False
     )
+
+    
+    class Config():
+        orm_mode = True

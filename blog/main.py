@@ -1,8 +1,12 @@
+# Python
+from typing import List
+
 # Path
 from models.db_models import PostDB
 from models.api_models import Post
 from database import SessionLocal, Base, engine
 
+# SQLAlchemy
 from sqlalchemy.orm import Session
 
 # FastAPI
@@ -37,13 +41,16 @@ def create_post(post: Post = Body(...), db: Session = Depends(get_db)):
 
 @app.get(
     path='/blog',
+    response_model=List[Post],
     status_code=status.HTTP_200_OK)
 def show_all_posts(db: Session = Depends(get_db)):
     posts = db.query(PostDB).all()
     return posts
 
+
 @app.get(
     path='/blog/{id}',
+    response_model=Post,
     status_code=status.HTTP_200_OK)
 def show_a_post(
     id: int = Path(
@@ -89,6 +96,7 @@ def delete_a_post(
     db.commit()
 
     return None
+
 
 @app.put(
 path='/blog/{id}', 
