@@ -1,12 +1,13 @@
 # Python
 from typing import List
 
+from passlib.utils.decor import deprecated_method
+
 # Path
 from models.db_models import PostDB, UserDB
-
 from models.api_models import Post, User
-
 from database import SessionLocal, Base, engine
+from hashing import Hash
 
 # SQLAlchemy
 from sqlalchemy.orm import Session
@@ -133,6 +134,8 @@ def update_a_post(
 # User
 @app.post('/user')
 def create_user(user: User = Body(...), db : Session = Depends(get_db)):
+
+    user.password = Hash.hash_password(user.password)
 
     new_user = UserDB(**user.dict())
     db.add(new_user)
