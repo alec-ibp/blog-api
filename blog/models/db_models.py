@@ -10,9 +10,9 @@ class PostDB(Base):
 
     id = Column(Integer, primary_key=True, index=True)
 
-    title = Column(String(64))
-    body = Column(Text)
-    published = Column(Boolean)
+    title = Column(String(64), nullable=False)
+    body = Column(Text, nullable=False)
+    published = Column(Boolean, nullable=False, default=False)
 
 
     def __init__(self, title, body, published) -> None:
@@ -26,11 +26,11 @@ class UserDB(Base):
 
     id = Column(Integer, primary_key=True, index=True)
 
-    first_name = Column(String(32))
-    last_name = Column(String(32))
-    username = Column(String(64))
-    email = Column(String(128))
-    password = Column(String(128))
+    first_name = Column(String(32), nullable=False)
+    last_name = Column(String(32), nullable=False)
+    username = Column(String(64), nullable=False)
+    email = Column(String(128), nullable=False, unique=True)
+    password = Column(String(128), nullable=False)
 
 
     def __init__(self, first_name, last_name, username, email, password) -> None:
