@@ -1,5 +1,4 @@
 # Python
-import re
 from typing import List
 
 # Path
@@ -32,7 +31,8 @@ def get_db():
 # Blog 
 @app.post(
     path='/blog',
-    status_code=status.HTTP_201_CREATED)
+    tags=['blog'],
+    status_code=status.HTTP_201_CREATED,)
 def create_post(post: Post = Body(...), db: Session = Depends(get_db)):
     
     new_post = PostDB(**post.dict())
@@ -46,6 +46,7 @@ def create_post(post: Post = Body(...), db: Session = Depends(get_db)):
 
 @app.get(
     path='/blog',
+    tags=['blog'],
     response_model=List[Post],
     status_code=status.HTTP_200_OK)
 def show_all_posts(db: Session = Depends(get_db)):
@@ -56,6 +57,7 @@ def show_all_posts(db: Session = Depends(get_db)):
 
 @app.get(
     path='/blog/{id}',
+    tags=['blog'],
     response_model=Post,
     status_code=status.HTTP_200_OK)
 def show_a_post(
@@ -80,6 +82,7 @@ def show_a_post(
 
 @app.delete(
     path='/blog/{id}',
+    tags=['blog'],
     status_code=status.HTTP_204_NO_CONTENT)
 def delete_a_post(
     id: int = Path(
@@ -105,7 +108,8 @@ def delete_a_post(
 
 
 @app.put(
-path='/blog/{id}', 
+path='/blog/{id}',
+tags=['blog'], 
 status_code=status.HTTP_202_ACCEPTED) 
 def update_a_post(
     id: int = Path(
@@ -133,6 +137,7 @@ def update_a_post(
 # User
 @app.post(
     path='/user',
+    tags=['user'],
     response_model=UserBase)
 def create_user(user: UserIn = Body(...), db : Session = Depends(get_db)):
 
@@ -148,6 +153,7 @@ def create_user(user: UserIn = Body(...), db : Session = Depends(get_db)):
 
 @app.get(
     path='/user/{id}',
+    tags=['user'],
     response_model=UserBase)
 def show_a_user(
     id: int = Path(
