@@ -29,7 +29,7 @@ class Post(BaseModel):
         orm_mode = True
 
 
-class User(BaseModel):
+class UserBase(BaseModel):
     first_name: str = Field(
         ...,
         min_length=2,
@@ -50,6 +50,12 @@ class User(BaseModel):
 
     email: EmailStr = Field(...)
 
+    
+    class Config():
+        orm_mode = True
+
+
+class UserIn(UserBase):
     password: str = Field(
         ...,
         min_length=8

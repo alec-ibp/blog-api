@@ -1,11 +1,10 @@
 # Python
+import re
 from typing import List
-
-from passlib.utils.decor import deprecated_method
 
 # Path
 from models.db_models import PostDB, UserDB
-from models.api_models import Post, User
+from models.api_models import Post, UserIn, UserBase
 from database import SessionLocal, Base, engine
 from hashing import Hash
 
@@ -132,8 +131,10 @@ def update_a_post(
     return None
 
 # User
-@app.post('/user')
-def create_user(user: User = Body(...), db : Session = Depends(get_db)):
+@app.post(
+    path='/user',
+    response_model=UserBase)
+def create_user(user: UserIn = Body(...), db : Session = Depends(get_db)):
 
     user.password = Hash.hash_password(user.password)
 
@@ -144,3 +145,26 @@ def create_user(user: User = Body(...), db : Session = Depends(get_db)):
 
     return new_user
     
+
+@app.get(
+    path='/user/{id}',
+    response_model=UserBase)
+def show_a_user(
+    id: int = Path(
+        ...,
+        ge=0
+    ),
+    db: Session = Depends(get_db)
+    ):
+
+    user = db.query(UserDB).filter(
+        UserDB.id == id
+    ).first()
+
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="The user does't exist"
+        )
+    
+    return user
