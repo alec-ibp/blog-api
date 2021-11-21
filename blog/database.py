@@ -5,10 +5,20 @@ from sqlalchemy.ext.declarative import declarative_base
 
 DATABASE_URL: str = ''
 
+
 def get_database_url():
     with open('credentials.txt', 'r', encoding='utf-8') as f:
         key = f.readline()
     return key
+
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
 
 DATABASE_URL = get_database_url()
 
