@@ -3,7 +3,7 @@ from typing import List
 
 # Path
 from models.db_models import PostDB, UserDB
-from models.api_models import Post, UserIn, UserBase
+from models.api_models import Post, ShowPost, ShowUser, UserIn, UserBase
 from database import SessionLocal, Base, engine
 from hashing import Hash
 
@@ -35,7 +35,9 @@ def get_db():
     status_code=status.HTTP_201_CREATED,)
 def create_post(post: Post = Body(...), db: Session = Depends(get_db)):
     
-    new_post = PostDB(**post.dict())
+    post_dict = post.dict()
+    post_dict['user_id'] = 1 
+    new_post = PostDB(**post_dict)
 
     db.add(new_post)
     db.commit()
@@ -47,7 +49,7 @@ def create_post(post: Post = Body(...), db: Session = Depends(get_db)):
 @app.get(
     path='/blog',
     tags=['blog'],
-    response_model=List[Post],
+    response_model=List[ShowPost],
     status_code=status.HTTP_200_OK)
 def show_all_posts(db: Session = Depends(get_db)):
     posts = db.query(PostDB).all()
@@ -58,7 +60,7 @@ def show_all_posts(db: Session = Depends(get_db)):
 @app.get(
     path='/blog/{id}',
     tags=['blog'],
-    response_model=Post,
+    response_model=ShowPost,
     status_code=status.HTTP_200_OK)
 def show_a_post(
     id: int = Path(
@@ -154,7 +156,7 @@ def create_user(user: UserIn = Body(...), db : Session = Depends(get_db)):
 @app.get(
     path='/user/{id}',
     tags=['user'],
-    response_model=UserBase)
+    response_model=ShowUser)
 def show_a_user(
     id: int = Path(
         ...,

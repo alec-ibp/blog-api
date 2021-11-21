@@ -1,5 +1,5 @@
 # Python
-from typing import Optional
+from typing import Optional, List
 
 # Pydantic
 from pydantic import BaseModel
@@ -60,3 +60,14 @@ class UserIn(UserBase):
         ...,
         min_length=8
     )
+
+
+class ShowPost(Post):
+    author: UserBase = Field(...)
+
+    class Config():
+        orm_mode = True
+
+
+class ShowUser(UserBase):
+    posts: List[Post] = Field(...)
