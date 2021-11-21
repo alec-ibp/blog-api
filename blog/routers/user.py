@@ -13,12 +13,14 @@ from fastapi import status, HTTPException
 from fastapi import Body, Path
 
 
-router = APIRouter()
+router = APIRouter(
+    prefix='/user',
+    tags=['user']
+)
 
 
 @router.post(
-    path='/user',
-    tags=['user'],
+    path='/',
     response_model=UserBase)
 def create_user(user: UserIn = Body(...), db : Session = Depends(get_db)):
 
@@ -33,8 +35,7 @@ def create_user(user: UserIn = Body(...), db : Session = Depends(get_db)):
 
 
 @router.get(
-    path='/user/{id}',
-    tags=['user'],
+    path='/{id}',
     response_model=ShowUser)
 def show_a_user(
     id: int = Path(

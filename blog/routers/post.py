@@ -15,12 +15,14 @@ from fastapi import status, HTTPException
 from fastapi import Body, Path
 
 
-router = APIRouter()
+router = APIRouter(
+    prefix='/blog',
+    tags=['blog']
+)
 
 
 @router.post(
-    path='/blog',
-    tags=['blog'],
+    path='/',
     status_code=status.HTTP_201_CREATED,)
 def create_post(post: Post = Body(...), db: Session = Depends(get_db)):
     
@@ -36,8 +38,7 @@ def create_post(post: Post = Body(...), db: Session = Depends(get_db)):
 
 
 @router.get(
-    path='/blog',
-    tags=['blog'],
+    path='/',
     response_model=List[ShowPost],
     status_code=status.HTTP_200_OK)
 def show_all_posts(db: Session = Depends(get_db)):
@@ -47,8 +48,7 @@ def show_all_posts(db: Session = Depends(get_db)):
 
 
 @router.get(
-    path='/blog/{id}',
-    tags=['blog'],
+    path='/{id}',
     response_model=ShowPost,
     status_code=status.HTTP_200_OK)
 def show_a_post(
@@ -72,8 +72,7 @@ def show_a_post(
 
 
 @router.delete(
-    path='/blog/{id}',
-    tags=['blog'],
+    path='/{id}',
     status_code=status.HTTP_204_NO_CONTENT)
 def delete_a_post(
     id: int = Path(
@@ -99,7 +98,7 @@ def delete_a_post(
 
 
 @router.put(
-path='/blog/{id}',
+path='/{id}',
 tags=['blog'], 
 status_code=status.HTTP_202_ACCEPTED) 
 def update_a_post(
