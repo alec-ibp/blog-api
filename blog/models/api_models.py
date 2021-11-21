@@ -62,12 +62,14 @@ class UserIn(UserBase):
     )
 
 
+class ShowUser(UserBase):
+    posts: List[Post] = Field(...)
+
+
 class ShowPost(Post):
-    author: UserBase = Field(...)
+    author: ShowUser = Field(...)
 
     class Config():
         orm_mode = True
 
 
-class ShowUser(UserBase):
-    posts: List[Post] = Field(...)
