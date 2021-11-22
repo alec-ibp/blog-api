@@ -68,8 +68,3 @@ class ShowUser(UserBase):
 
 class ShowPost(Post):
     author: ShowUser = Field(...)
-
-    class Config():
-        orm_mode = True
-
-
