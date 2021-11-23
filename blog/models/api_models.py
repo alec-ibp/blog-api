@@ -62,9 +62,30 @@ class UserIn(UserBase):
     )
 
 
+class LoginUser(BaseModel):
+    username: str = Field(
+        ...,
+        min_length=2,
+        max_length=64
+    )
+
+    password: str = Field(
+        ...,
+        min_length=8
+    )
+
 class ShowUser(UserBase):
     posts: List[Post] = Field(...)
 
 
 class ShowPost(Post):
     author: ShowUser = Field(...)
+
+
+class Token(BaseModel):
+    access_token: str = Field(...)
+    token_type: str = Field(...)
+
+
+class TokenData(BaseModel):
+    email: Optional[EmailStr]

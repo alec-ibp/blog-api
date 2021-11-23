@@ -2,9 +2,10 @@
 from typing import List
 
 # Path
-from models.api_models import Post, ShowPost
+from models.api_models import Post, ShowPost, UserBase
 from database import get_db
 from repository import post
+from oauth2 import get_current_user
 
 # SQLAlchemy
 from sqlalchemy.orm import Session
@@ -33,7 +34,8 @@ def create_post(in_post: Post = Body(...), db: Session = Depends(get_db)):
     path='/',
     response_model=List[ShowPost],
     status_code=status.HTTP_200_OK)
-def show_all_posts(db: Session = Depends(get_db)):
+def show_all_posts(db: Session = Depends(get_db), current_user: UserBase = Depends(get_current_user)):
+    print(f'the user {current_user}')
     return post.get_all(db)
 
 
