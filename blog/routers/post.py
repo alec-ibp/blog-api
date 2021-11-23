@@ -3,6 +3,7 @@ from typing import List
 
 # Path
 from models.api_models import Post, ShowPost, UserBase
+from models.db_models import UserDB
 from database import get_db
 from repository import post
 from oauth2 import get_current_user
@@ -26,15 +27,21 @@ router = APIRouter(
     path='/',
     response_model=Post,
     status_code=status.HTTP_201_CREATED,)
-def create_post(in_post: Post = Body(...), db: Session = Depends(get_db)):
-    return post.create(in_post, db)
+def create_post(
+    in_post: Post = Body(...),
+    db: Session = Depends(get_db),
+    current_user: UserDB = Depends(get_current_user)):
+
+    return post.create(in_post, db, current_user)
 
 
 @router.get(
     path='/',
     response_model=List[ShowPost],
     status_code=status.HTTP_200_OK)
-def show_all_posts(db: Session = Depends(get_db), current_user: UserBase = Depends(get_current_user)):
+def show_all_posts(
+    db: Session = Depends(get_db), 
+    current_user: UserBase = Depends(get_current_user)):
     return post.get_all(db)
 
 
@@ -47,8 +54,8 @@ def show_a_post(
         ...,
         ge=1
     ),
-    db: Session = Depends(get_db)
-    ):
+    db: Session = Depends(get_db),
+    current_user: UserBase = Depends(get_current_user)):
 
     return post.get(id, db)
 
@@ -61,8 +68,8 @@ def delete_a_post(
         ...,
         ge=1
     ),
-    db: Session = Depends(get_db)
-    ):
+    db: Session = Depends(get_db),
+    current_user: UserBase = Depends(get_current_user)):
 
     return post.delete(id, db)
 
@@ -76,7 +83,7 @@ def update_a_post(
         ge=0
     ),
     in_post: Post = Body(...),
-    db: Session = Depends(get_db)
-    ):
+    db: Session = Depends(get_db),
+    current_user: UserBase = Depends(get_current_user)):
 
     return post.update(id, in_post, db)

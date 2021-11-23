@@ -1,5 +1,5 @@
 # Path
-from models.db_models import PostDB
+from models.db_models import PostDB, UserDB
 from models.api_models import Post
 # SQLAlchemy
 from sqlalchemy.orm import Session
@@ -26,9 +26,9 @@ def get(id: int, db: Session):
     return post
 
 
-def create(post: Post, db: Session):
+def create(post: Post, db: Session, current_user: UserDB):
     post_dict = post.dict()
-    post_dict['user_id'] = 1 
+    post_dict['user_id'] = current_user.id
     new_post = PostDB(**post_dict)
 
     db.add(new_post)
